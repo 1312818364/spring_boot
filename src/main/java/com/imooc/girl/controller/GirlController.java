@@ -24,6 +24,7 @@ public class GirlController {
      */
     @GetMapping(value = "/girls")
     public List<Girl> girlList(){
+        System.out.println("girlList");
         return girlRepository.findAll();
     }
 
