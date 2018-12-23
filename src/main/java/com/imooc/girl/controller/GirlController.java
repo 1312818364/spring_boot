@@ -4,8 +4,10 @@ import com.imooc.girl.domain.Girl;
 import com.imooc.girl.repository.GirlRepository;
 import com.imooc.girl.service.GirlService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,11 +31,14 @@ public class GirlController {
     添加一个girl
      */
     @PostMapping(value = "girls")
-    public Girl girlADD(@RequestParam("cupSize") String cupSize, @RequestParam("age") Integer age){
-        Girl girl = new Girl();
-        girl.setCupSize(cupSize);
-        girl.setAge(age);
-
+    public Girl girlADD(@Valid Girl girl, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            System.out.println(bindingResult.getFieldError().getDefaultMessage());
+            return null;
+        }
+        System.out.println(girl.getAge() + girl.getCupSize());
+//        girl.setCupSize(girl.getCupSize());
+//        girl.setAge(girl.getAge());
         girlRepository.save(girl);
         return girl;
     }
