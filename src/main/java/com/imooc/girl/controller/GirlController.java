@@ -2,8 +2,10 @@ package com.imooc.girl.controller;
 
 import com.imooc.girl.aspect.HttpAspect;
 import com.imooc.girl.domain.Girl;
+import com.imooc.girl.domain.Result;
 import com.imooc.girl.repository.GirlRepository;
 import com.imooc.girl.service.GirlService;
+import com.imooc.girl.utils.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +39,12 @@ public class GirlController {
     添加一个girl
      */
     @PostMapping(value = "girls")
-    public Girl girlADD(@Valid Girl girl, BindingResult bindingResult){
+    public Result<Girl> girlADD(@Valid Girl girl, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            System.out.println(bindingResult.getFieldError().getDefaultMessage());
-            return null;
+            return ResultUtil.error(1, bindingResult.getFieldError().getDefaultMessage());
         }
-        System.out.println(girl.getAge() + girl.getCupSize());
-//        girl.setCupSize(girl.getCupSize());
-//        girl.setAge(girl.getAge());
-        girlRepository.save(girl);
-        return girl;
+
+        return ResultUtil.success(girlRepository.save(girl));
     }
 
     //查询一个女生
@@ -83,4 +81,12 @@ public class GirlController {
     public void girlTwo(){
         girlService.insertTwo();
     }
+
+    //判断年龄
+    @GetMapping(value = "/girls/getAge/{id}")
+    public Result<Integer> getAgeById(@PathVariable("id") Integer id) throws Exception {
+            return girlService.getAge(id);
+    }
+
+
 }
